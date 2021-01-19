@@ -1,0 +1,17 @@
+/datasetTmp*
+*.autosave
+*.asv
+*.jpg
+*.png
+*.xml
+*.txt
+*.xlsx
+*.rar
+*.zip
+/othres/*
+/train/*
+/1dataset_regular/*
+/2dataset_irregular/*
+/3dataset_irregular_png/*
+/4dataset_irregular_png_06resize/*
+*.ps
