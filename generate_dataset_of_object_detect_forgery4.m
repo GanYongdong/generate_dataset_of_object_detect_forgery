@@ -20,7 +20,7 @@ the_region_of_opera = "irregular"; %进行操作的区域形状，可选"irregul
 % generate_retangle_areas_based_on_one_point.m
 Maximum_number_of_targets = 8; % 每张图片最大目标个数
 Maximum_proportion_of_target_in_image = 0.4; % 目标占图像最大比例
-imgDataPath = 'D:\Research\dataset\dataset_detect_forgery\src10'; %源图像目录
+imgDataPath = 'D:\Research\dataset\dataset_detect_forgery\src5000'; %源图像目录
 imgDataOutPath = 'D:\Research\dataset\dataset_detect_forgery\datasetTmp'; %输出图像目录
 kernel_range = [3,3]; %均值滤波、中值滤波和高斯滤波选择进行操作的内核尺寸范围，一行两列，小的在前，大的在后，相等就是固定大小
 saltAndPepper_density = 0.03; %椒盐噪声密度
@@ -56,7 +56,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     strTmp1 = imgDataDir(picCount).name;
     strTmp2 = strsplit(strTmp1,'.');
     pngFileName = strcat(strTmp2(1,1), '.png');
-    clear strTmp1 strTmp2;
+    clear strTmp1;
     picGrayPath = strcat(imgDataOutPath,'\','gray','\',pngFileName);
     picGrayOutPath = strcat(imgDataOutPath,'\','grayOut','\',pngFileName);
     picGrayWithBoxOutPath = strcat(imgDataOutPath,'\','grayOutWithBox','\',pngFileName);
@@ -64,6 +64,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     picRgbOutPath = strcat(imgDataOutPath,'\','rgbOut','\',pngFileName);
     picRgbWithBoxOutPath = strcat(imgDataOutPath,'\','rgbOutWithBox','\',pngFileName);
     picMask = strcat(imgDataOutPath,'\','picMask','\',pngFileName);
+    clear strTmp2;
     
     % 生成输出yolo标准标签文件路径
     nameTmp1 = imgDataDir(picCount).name;
@@ -163,38 +164,40 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
 
     % 显示调试
-%     figure (1)
-%     subplot(2,7,1)
-%     imshow(imgGray);
-%     subplot(2,7,2)
-%     imshow(img_gray_homoFilter);
-%     subplot(2,7,3)
-%     imshow(img_gray_medfilt);
-%     subplot(2,7,4)
-%     imshow(img_gray_saltAndPepper);
-%     subplot(2,7,5)
-%     imshow(img_gray_histeq);
-%     subplot(2,7,6)
-%     imshow(img_gray_gausFilter);
-%     subplot(2,7,7)
-%     imshow(img_gray_prewittSharp);
-%     if is_process_rgb
-%         subplot(2,7,8)
-%         imshow(imgRgb);
-%         subplot(2,7,9)
-%         imshow(img_rgb_homoFilter);
-%         subplot(2,7,10)
-%         imshow(img_rgb_medfilt);
-%         subplot(2,7,11)
-%         imshow(img_rgb_saltAndPepper);
-%         subplot(2,7,12)
-%         imshow(img_rgb_histeq);
-%         subplot(2,7,13)
-%         imshow(img_rgb_gausFilter);
-%         subplot(2,7,14)
-%         imshow(img_rgb_prewittSharp);
-%     end
-%     close 1; %关闭figure
+    %{
+    figure (1)
+    subplot(2,7,1)
+    imshow(imgGray);
+    subplot(2,7,2)
+    imshow(img_gray_homoFilter);
+    subplot(2,7,3)
+    imshow(img_gray_medfilt);
+    subplot(2,7,4)
+    imshow(img_gray_saltAndPepper);
+    subplot(2,7,5)
+    imshow(img_gray_histeq);
+    subplot(2,7,6)
+    imshow(img_gray_gausFilter);
+    subplot(2,7,7)
+    imshow(img_gray_prewittSharp);
+    if is_process_rgb
+        subplot(2,7,8)
+        imshow(imgRgb);
+        subplot(2,7,9)
+        imshow(img_rgb_homoFilter);
+        subplot(2,7,10)
+        imshow(img_rgb_medfilt);
+        subplot(2,7,11)
+        imshow(img_rgb_saltAndPepper);
+        subplot(2,7,12)
+        imshow(img_rgb_histeq);
+        subplot(2,7,13)
+        imshow(img_rgb_gausFilter);
+        subplot(2,7,14)
+        imshow(img_rgb_prewittSharp);
+    end
+    close 1; %关闭figure
+    %}
 
     % 随机生成 当前图片需要进行几次操作
     objectNum = randi([1, Maximum_number_of_targets]);
@@ -203,8 +206,8 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     labelSet = zeros(objectNum,1);
     seedCoordinateSet = zeros(objectNum,2);
     for i = 1 : objectNum
-%         labelSet(i,1) = randi([1, 6]);
-        labelSet(i,1) = 4;
+        labelSet(i,1) = randi([1, 6]);
+%         labelSet(i,1) = 4;
         seedCoordinateSet(i,1) = randi([5, cols-5]);%不要太靠边上
         seedCoordinateSet(i,2) = randi([5, rows-5]);
     end
@@ -244,13 +247,19 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
     
     % 计算每个的宽高
-    object_info = zeros(objectNum,16);
+    object_info = zeros(objectNum,21);
+    pg_point_set = zeros(objectNum, 8);
     for i = 1 : objectNum
         object_info(i,1) = labelSet(i,1);
         object_info(i,2:3) = [cols,rows];
         % [left,top,w,h,cx,cy,right,bottom,area, cx_rate, cy_rate, w_rate, h_rate]
         [left,top,w,h,cx,cy,right,bottom,area,cx_rate,cy_rate,w_rate,h_rate] = get_box_of_object(img_gray_mask(:,:,i)); 
         object_info(i,4:16) = [left,top,w,h,cx,cy,right,bottom,area,cx_rate,cy_rate,w_rate,h_rate];
+        
+        % 20210122 每个单层mask进行最大占比平行四边形计算
+        [pg_x, pg_y, pg_side1, pg_side2, pg_theta, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y] = Parallelogram_det(img_gray_mask(:,:,i));
+        object_info(i,17:21) = [pg_x, pg_y, pg_side1, pg_side2, pg_theta];
+        pg_point_set(i,1:8) = [p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y];
     end
     clear left top w h cx cy right bottom area;
     
@@ -293,12 +302,14 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
                     end
                 end
                 % 先取不规则区域, 然后局部直方图均衡化
-%                 grayOut = histeq_in_local_irregular_area(grayOut, img_gray_mask(:,:,i));
-%                 if is_process_rgb
-%                     rgbOut(:,:,1) = histeq_in_local_irregular_area(rgbOut(:,:,1), img_gray_mask(:,:,i));
-%                     rgbOut(:,:,2) = histeq_in_local_irregular_area(rgbOut(:,:,2), img_gray_mask(:,:,i));
-%                     rgbOut(:,:,3) = histeq_in_local_irregular_area(rgbOut(:,:,3), img_gray_mask(:,:,i));
-%                 end
+                %{
+                grayOut = histeq_in_local_irregular_area(grayOut, img_gray_mask(:,:,i));
+                if is_process_rgb
+                    rgbOut(:,:,1) = histeq_in_local_irregular_area(rgbOut(:,:,1), img_gray_mask(:,:,i));
+                    rgbOut(:,:,2) = histeq_in_local_irregular_area(rgbOut(:,:,2), img_gray_mask(:,:,i));
+                    rgbOut(:,:,3) = histeq_in_local_irregular_area(rgbOut(:,:,3), img_gray_mask(:,:,i));
+                end
+                %}
             case 5
                 for j = 1 : size(pixel_list,1)
                     grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_gausFilter(pixel_list(j,2),pixel_list(j,1));
@@ -351,27 +362,51 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
                 disp('class out of range');
         end
     end
-    grayOutWithBox = insertObjectAnnotation(grayOutWithBox, 'rectangle', position, label_str,'color', color, 'textcolor', 'black');
+    grayOutWithBox = insertObjectAnnotation(grayOutWithBox, 'rectangle', position, label_str,'color', color, 'textcolor', 'black', 'LineWidth', 1);
     if is_process_rgb
-        rgbOutWithBox = insertObjectAnnotation(rgbOutWithBox, 'rectangle', position, label_str,'color', color, 'textcolor', 'black');
+        rgbOutWithBox = insertObjectAnnotation(rgbOutWithBox, 'rectangle', position, label_str,'color', color, 'textcolor', 'black', 'LineWidth', 1);
+    end
+    
+    % 20210122绘制平行四边形
+    h = figure(1);
+    imshow(grayOutWithBox,'InitialMagnification','fit');
+    for i = 1 : objectNum
+        line([pg_point_set(i,1),pg_point_set(i,3)],[pg_point_set(i,2),pg_point_set(i,4)],'linewidth',3);
+        line([pg_point_set(i,3),pg_point_set(i,5)],[pg_point_set(i,4),pg_point_set(i,6)],'linewidth',3);
+        line([pg_point_set(i,5),pg_point_set(i,7)],[pg_point_set(i,6),pg_point_set(i,8)],'linewidth',3);
+        line([pg_point_set(i,7),pg_point_set(i,1)],[pg_point_set(i,8),pg_point_set(i,2)],'linewidth',3);
+    end
+    saveas(h, picGrayWithBoxOutPath{1}, 'png');
+    close all;
+    if is_process_rgb
+        h = figure(1);
+        imshow(rgbOutWithBox,'InitialMagnification','fit');
+        for i = 1 : objectNum
+            line([pg_point_set(i,1),pg_point_set(i,3)],[pg_point_set(i,2),pg_point_set(i,4)],'linewidth',3);
+            line([pg_point_set(i,3),pg_point_set(i,5)],[pg_point_set(i,4),pg_point_set(i,6)],'linewidth',3);
+            line([pg_point_set(i,5),pg_point_set(i,7)],[pg_point_set(i,6),pg_point_set(i,8)],'linewidth',3);
+            line([pg_point_set(i,7),pg_point_set(i,1)],[pg_point_set(i,8),pg_point_set(i,2)],'linewidth',3);
+        end
+        saveas(h, picRgbWithBoxOutPath{1}, 'png');
+        close all;
     end
     
     % 保存图像文件
     imwrite(imgGray, picGrayPath{1}, 'Compression','none');%jpg存在压缩，考虑png无压缩保存
     imwrite(grayOut, picGrayOutPath{1}, 'Compression','none');
-    imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
+%     imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
     imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
     imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
-    imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
+%     imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
     imwrite(img_gray_mask(:,:,end), picMask{1}, 'Compression','none');
     
     % 保存文本文件
     txt_yolo_path = strcat(imgDataOutPath,'\','yolo_label_txt','\',imgDataDir(picCount).name);
-    txt_yolo_path = strrep(txt_yolo_path, '.jpg', '.txt');
+    txt_yolo_path = strrep(txt_yolo_path, '.png', '.txt');
     xml_yolo_path = strcat(imgDataOutPath,'\','yolo_label_xml','\',imgDataDir(picCount).name);
-    xml_yolo_path = strrep(xml_yolo_path, '.jpg', '.xml');
+    xml_yolo_path = strrep(xml_yolo_path, '.png', '.xml');
     xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info_path','\',imgDataDir(picCount).name);
-    xlsx_all_info_path = strrep(xlsx_all_info_path, '.jpg', '.xlsx');
+    xlsx_all_info_path = strrep(xlsx_all_info_path, '.png', '.xlsx');
     txt_yolo_data = zeros(objectNum, 5);
     for i = 1 : objectNum
         txt_yolo_data(i,1) = object_info(i,1);
