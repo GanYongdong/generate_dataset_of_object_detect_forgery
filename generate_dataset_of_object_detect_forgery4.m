@@ -1,58 +1,57 @@
 %
-% ç”Ÿæˆç›®æ ‡æ£€æµ‹çš„æ•°æ®é›†ï¼Œè¿™é‡Œç›®æ ‡æ˜¯è‡ªå·±ç”Ÿæˆçš„ä¸€äº›å±€éƒ¨æ“ä½œåŒºåŸŸ
-% æ¯”å¦‚è¿™ä¸ªå–è¯æ•°æ®é›†ï¼Œç»™å®šå›¾ç‰‡é›†ï¼Œè¯»å–æ¯ä¸€å¼ å›¾ç‰‡ï¼Œä¼šéšæœºå–ä¸€å—ä¸è§„åˆ™åŒºåŸŸï¼Œéšæœº
-% é‡‡å–6ç§æ“ä½œæ–¹æ³•ä¸­çš„ä¸€ç§è¿›è¡Œæ“ä½œï¼Œä¿å­˜å½“å‰æœ€å¤§çŸ©å½¢æ¡†å˜é‡å’Œæ“ä½œåçš„å›¾ç‰‡ï¼Œå‚¨å­˜
-% åˆ°æœ¬åœ°æ–‡ä»¶.æ“ä½œæ•°ç›®å‰æ˜¯6ï¼Œå¯¹åº”ç±»åˆ«æ ‡ç­¾1-6
-% è¾“å…¥è¾“å‡ºç›®å½•å’Œä¸€äº›ç”¨æˆ·å‚æ•°åœ¨ç”¨æˆ·åŒºä¿®æ”¹
-% 2021.1.20æ›´æ–°ï¼š
-% 1. å°†çŸ©å½¢æ¡†æ”¹æˆå¹³è¡Œå››è¾¹å½¢æ¡†ï¼Œä¸»è¦æ€è·¯æ˜¯å…ˆéšæœºå¤šä¸ªå¹³è¡Œå››è¾¹å½¢ï¼Œä¸é‡å ï¼Œå¹³è¡Œå››
-%    è¾¹å½¢ä¸­å¿ƒå¼€å§‹å‘å¤–è†¨èƒ€,è§¦ç¢°åˆ°ä¸€è¾¹çš„è¾¹ç•Œåˆ™åœæ­¢
+% Éú³ÉÄ¿±ê¼ì²âµÄÊı¾İ¼¯£¬ÕâÀïÄ¿±êÊÇ×Ô¼ºÉú³ÉµÄÒ»Ğ©¾Ö²¿²Ù×÷ÇøÓò
+% ±ÈÈçÕâ¸öÈ¡Ö¤Êı¾İ¼¯£¬¸ø¶¨Í¼Æ¬¼¯£¬¶ÁÈ¡Ã¿Ò»ÕÅÍ¼Æ¬£¬»áËæ»úÈ¡Ò»¿é²»¹æÔòÇøÓò£¬Ëæ»ú
+% ²ÉÈ¡6ÖÖ²Ù×÷·½·¨ÖĞµÄÒ»ÖÖ½øĞĞ²Ù×÷£¬±£´æµ±Ç°×î´ó¾ØĞÎ¿ò±äÁ¿ºÍ²Ù×÷ºóµÄÍ¼Æ¬£¬´¢´æ
+% µ½±¾µØÎÄ¼ş.²Ù×÷ÊıÄ¿Ç°ÊÇ6£¬¶ÔÓ¦Àà±ğ±êÇ©1-6
+% ÊäÈëÊä³öÄ¿Â¼ºÍÒ»Ğ©ÓÃ»§²ÎÊıÔÚÓÃ»§ÇøĞŞ¸Ä
+% 2021.1.20¸üĞÂ£º
+% 1. ½«¾ØĞÎ¿ò¸Ä³ÉÆ½ĞĞËÄ±ßĞÎ¿ò£¬Ö÷ÒªË¼Â·ÊÇÏÈËæ»ú¶à¸öÆ½ĞĞËÄ±ßĞÎ£¬²»ÖØµş£¬Æ½ĞĞËÄ
+%    ±ßĞÎÖĞĞÄ¿ªÊ¼ÏòÍâÅòÕÍ,´¥Åöµ½Ò»±ßµÄ±ß½çÔòÍ£Ö¹
 % author: ganyongdong <1141951289@qq.com> 2021.1.20
 %
 
 clc; clear; close all;
 
-% ç”¨æˆ·é€‰æ‹©åŒº
-is_process_rgb = logical(true); % æ˜¯å¦å¤„ç†RGBå›¾åƒ
-is_allow_objects_to_overlap = logical(false); % æ˜¯å¦å…è®¸objecté‡åˆï¼ŒæŒ‡çš„æ˜¯ç›®æ ‡ä¸è§„åˆ™åŒºåŸŸæ²¡æœ‰é‡åˆï¼Œæ¡†å¯èƒ½è¿˜æ˜¯é‡åˆçš„
-the_region_of_opera = "irregular"; %è¿›è¡Œæ“ä½œçš„åŒºåŸŸå½¢çŠ¶ï¼Œå¯é€‰"irregular"å’Œ"retangle"ï¼Œ
-% åˆ†åˆ«æ˜¯ç”Ÿæˆä¸è§„åˆ™æ“ä½œåŒºåŸŸå’ŒçŸ©å½¢æ“ä½œåŒºåŸŸï¼Œå¯ä»¥è‡ªå·±å†™å…¶ä»–æ“ä½œåŒºåŸŸï¼Œç±»ä¼¼generate_irregular_areas_based_on_one_point.må’Œ
+% ÓÃ»§Ñ¡ÔñÇø
+is_process_rgb = logical(true); % ÊÇ·ñ´¦ÀíRGBÍ¼Ïñ
+is_allow_objects_to_overlap = logical(false); % ÊÇ·ñÔÊĞíobjectÖØºÏ£¬Ö¸µÄÊÇÄ¿±ê²»¹æÔòÇøÓòÃ»ÓĞÖØºÏ£¬¿ò¿ÉÄÜ»¹ÊÇÖØºÏµÄ
+the_region_of_opera = "irregular"; %½øĞĞ²Ù×÷µÄÇøÓòĞÎ×´£¬¿ÉÑ¡"irregular"ºÍ"retangle"£¬
+% ·Ö±ğÊÇÉú³É²»¹æÔò²Ù×÷ÇøÓòºÍ¾ØĞÎ²Ù×÷ÇøÓò£¬¿ÉÒÔ×Ô¼ºĞ´ÆäËû²Ù×÷ÇøÓò£¬ÀàËÆgenerate_irregular_areas_based_on_one_point.mºÍ
 % generate_retangle_areas_based_on_one_point.m
-Maximum_number_of_targets = 8; % æ¯å¼ å›¾ç‰‡æœ€å¤§ç›®æ ‡ä¸ªæ•°
-Maximum_proportion_of_target_in_image = 0.4; % ç›®æ ‡å å›¾åƒæœ€å¤§æ¯”ä¾‹
-imgDataPath = 'D:\Research\dataset\dataset_detect_forgery\src5000'; %æºå›¾åƒç›®å½•
-imgDataOutPath = 'D:\Research\dataset\dataset_detect_forgery\datasetTmp'; %è¾“å‡ºå›¾åƒç›®å½•
-kernel_range = [3,3]; %å‡å€¼æ»¤æ³¢ã€ä¸­å€¼æ»¤æ³¢å’Œé«˜æ–¯æ»¤æ³¢é€‰æ‹©è¿›è¡Œæ“ä½œçš„å†…æ ¸å°ºå¯¸èŒƒå›´ï¼Œä¸€è¡Œä¸¤åˆ—ï¼Œå°çš„åœ¨å‰ï¼Œå¤§çš„åœ¨åï¼Œç›¸ç­‰å°±æ˜¯å›ºå®šå¤§å°
-saltAndPepper_density = 0.03; %æ¤’ç›å™ªå£°å¯†åº¦
-homo_d0 = 0.008; %åŒæ€æ»¤æ³¢çš„D0å‚æ•°å€¼
-sharp_factor = 0.7; %é”åŒ–ç¨‹åº¦[0,1]
-step_range_control_the_size_of_object = [25,45]; %æ§åˆ¶ç”Ÿæˆçš„ç›®æ ‡å¤§å°çš„å‚æ•°ï¼Œèƒ½å¤Ÿå¤§æ¦‚æ§åˆ¶,ç›¸ç­‰å°±æ˜¯å‡ ä¹å›ºå®šå¤§å°
-factor_of_imgSrc_zoom = 0.6; %å¯¹æºå›¾åƒç¼©æ”¾å€æ•°ï¼Œå¯ä»¥æ§åˆ¶è¾“å‡ºå›¾åƒå°ºå¯¸ï¼ŒåŠ å¿«éƒ¨åˆ†ç½‘ç»œè®­ç»ƒé€Ÿåº¦ã€‚è¿™æ˜¯åœ¨è¿›è¡Œæ“ä½œä¹‹å‰ç¼©æ”¾ï¼Œä¸å½±å“æ“ä½œè´¨é‡ã€‚
+Maximum_number_of_targets = 8; % Ã¿ÕÅÍ¼Æ¬×î´óÄ¿±ê¸öÊı
+Maximum_proportion_of_target_in_image = 0.4; % Ä¿±êÕ¼Í¼Ïñ×î´ó±ÈÀı
+imgDataPath = 'D:\Dataset\VOC2012_JPEGImages'; %Ô´Í¼ÏñÄ¿Â¼
+imgDataOutPath = 'D:\Research\My_tamper_detect_dataset_generate\dataset_tmp'; %Êä³öÍ¼ÏñÄ¿Â¼
+kernel_range = [3,3]; %¾ùÖµÂË²¨¡¢ÖĞÖµÂË²¨ºÍ¸ßË¹ÂË²¨Ñ¡Ôñ½øĞĞ²Ù×÷µÄÄÚºË³ß´ç·¶Î§£¬Ò»ĞĞÁ½ÁĞ£¬Ğ¡µÄÔÚÇ°£¬´óµÄÔÚºó£¬ÏàµÈ¾ÍÊÇ¹Ì¶¨´óĞ¡
+saltAndPepper_density = 0.03; %½·ÑÎÔëÉùÃÜ¶È
+homo_d0 = 0.008; %Í¬Ì¬ÂË²¨µÄD0²ÎÊıÖµ
+sharp_factor = 0.7; %Èñ»¯³Ì¶È[0,1]
+step_range_control_the_size_of_object = [25,45]; %¿ØÖÆÉú³ÉµÄÄ¿±ê´óĞ¡µÄ²ÎÊı£¬ÄÜ¹»´ó¸Å¿ØÖÆ,ÏàµÈ¾ÍÊÇ¼¸ºõ¹Ì¶¨´óĞ¡
+factor_of_imgSrc_zoom = 0.6; %¶ÔÔ´Í¼ÏñËõ·Å±¶Êı£¬¿ÉÒÔ¿ØÖÆÊä³öÍ¼Ïñ³ß´ç£¬¼Ó¿ì²¿·ÖÍøÂçÑµÁ·ËÙ¶È¡£ÕâÊÇÔÚ½øĞĞ²Ù×÷Ö®Ç°Ëõ·Å£¬²»Ó°Ïì²Ù×÷ÖÊÁ¿¡£
 
-% è®¡æ—¶å¼€å§‹
+% ¼ÆÊ±¿ªÊ¼
 tic;
-% å…¨å±€è®¡æ•°
+% È«¾Ö¼ÆÊı
 count = 1;
-% é¢„è®¾labelå¯é€‰æ‰€å±ç±»åˆ«
-labelStrSet = ["homof"; "medif"; "aspn_"; "histe"; "gausf"; "sharp"; "awgn_"; "rsamp"];
+% Ô¤Éèlabel¿ÉÑ¡ËùÊôÀà±ğ
+labelStrSet = ["homofilt"; "medianfilt"; "addnoise"; "histeq"; "gaussfilt"; "sharp"; "resampling"; "gamma"];
+% ×îÖÕ±£´æµÄlableÈİÆ÷ºÍboxÈİÆ÷
 
-% æœ€ç»ˆä¿å­˜çš„lableå®¹å™¨å’Œboxå®¹å™¨
-
-% å¯¹ä¸åŒå›¾åƒå¾ªç¯
+% ¶Ô²»Í¬Í¼ÏñÑ­»·
 imgDataDir = dir(imgDataPath);
 imgCountTotal = size(imgDataDir,1) - 2;
-for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
+for picCount = 1:length(imgDataDir) % ±éÀúËùÓĞÍ¼Æ¬ÎÄ¼ş
     
-    % for picCount = 1:20 % éå†æ‰€æœ‰æ–‡ä»¶
+    % for picCount = 1:20 % ±éÀúËùÓĞÎÄ¼ş
     if(isequal(imgDataDir(picCount).name,'.') || isequal(imgDataDir(picCount).name,'..'))
-        % å»é™¤ç³»ç»Ÿè‡ªå¸¦çš„ä¸¤ä¸ªéšæ–‡ä»¶å¤¹
+        % È¥³ıÏµÍ³×Ô´øµÄÁ½¸öÒşÎÄ¼ş¼Ğ
         continue;
     end
     
-    % è·å–è¾“å…¥å›¾åƒè·¯å¾„
+    % »ñÈ¡ÊäÈëÍ¼ÏñÂ·¾¶
     picPath = strcat(imgDataPath,'\',imgDataDir(picCount).name);
     
-    % ç”Ÿæˆè¾“å‡ºå›¾åƒè·¯å¾„
+    % Éú³ÉÊä³öÍ¼ÏñÂ·¾¶
     strTmp1 = imgDataDir(picCount).name;
     strTmp2 = strsplit(strTmp1,'.');
     pngFileName = strcat(strTmp2(1,1), '.png');
@@ -66,7 +65,7 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
     picMask = strcat(imgDataOutPath,'\','picMask','\',pngFileName);
     clear strTmp2;
     
-    % ç”Ÿæˆè¾“å‡ºyoloæ ‡å‡†æ ‡ç­¾æ–‡ä»¶è·¯å¾„
+    % Éú³ÉÊä³öyolo±ê×¼±êÇ©ÎÄ¼şÂ·¾¶
     nameTmp1 = imgDataDir(picCount).name;
     nameTmp2 = strsplit(nameTmp1,'.');
     nemeTmp3 = strcat(nameTmp2(1,1), '.txt');
@@ -76,13 +75,13 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
     saveTxtPathOflabelWithBoxXlsxFile2 = strcat(imgDataOutPath,'\','label','\', nemeTmp3);
     saveTxtPathOflabelWithBoxXlsxFile = saveTxtPathOflabelWithBoxXlsxFile2{1};
     
-    % æœ€ç»ˆä¿å­˜çš„lableå®¹å™¨å’Œboxå®¹å™¨
+    % ×îÖÕ±£´æµÄlableÈİÆ÷ºÍboxÈİÆ÷
     labelArrIdx = [];
     labelArrStr = "str";
     boxArr = [];
     labelWithBoxFile = [];
     
-    % è¯»å–è¾“å…¥å›¾åƒ
+    % ¶ÁÈ¡ÊäÈëÍ¼Ïñ
     % imgSrc = imread('D:/DataSet/VOC2012_JPEGImages/2007_000032.jpg');
     imgSrc = imread(picPath);
     if factor_of_imgSrc_zoom ~= 1.0
@@ -98,72 +97,78 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
     else
         imgGray = imgSrc;
         is_process_rgb = logical(false);
-        disp('å•é€šé“å›¾åƒå¤„ç†');
+        disp('µ¥Í¨µÀÍ¼Ïñ´¦Àí');
     end
     clear imgSrc;
     imgGrayWithBox = imgGray;
     imgGrayOut = imgGray;
 
-    % éšæœºç”Ÿæˆæ ¸å°ºå¯¸ï¼Œåœ¨å›¾åƒèŒƒå›´å†…
+    % Ëæ»úÉú³ÉºË³ß´ç£¬ÔÚÍ¼Ïñ·¶Î§ÄÚ
     kernelVal = randi(kernel_range);
-    if mod(kernelVal, 2) == 0 %å†…æ ¸å°ºå¯¸å¿…é¡»ä¸ºå¥‡æ•°
+    if mod(kernelVal, 2) == 0 %ÄÚºË³ß´ç±ØĞëÎªÆæÊı
         kernelVal = kernelVal + 1;
     end
         
-    % ç”Ÿæˆ9å¹…ä¸åŒæ“ä½œçš„å›¾åƒï¼Œåè¾¹å¯¹åº”æ“ä½œçš„å°±ä»è¿™å–å›¾åƒ
-    img_gray_homoFilter = HomoFilter(imgGray, 2.2, 0.25, 2, homo_d0); %1åŒæ€æ»¤æ³¢
-    img_gray_medfilt = medfilt2(imgGray, [kernelVal, kernelVal]);%2ä¸­å€¼æ»¤æ³¢
-    imgTmp = im2double(imgGray); % æ”¹ä¸ºä½ è¦è¯»å…¥å›¾ç‰‡çš„è·¯å¾„;im2doubleä½œå½’ä¸€åŒ–å¤„ç†
-    img_gray_saltAndPepper = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density));%3.æ¤’ç›å™ªå£°
-    img_gray_histeq = histeq(imgGray); %4.ç›´æ–¹å›¾å‡è¡¡åŒ–
-    gausFilter = fspecial('gaussian',[kernelVal kernelVal],1); %é«˜æ–¯æ»¤æ³¢æ ¸
-    img_gray_gausFilter = imfilter(imgGray, gausFilter, 'replicate'); %5.é«˜æ–¯æ»¤æ³¢
-	img_gray_prewittSharp = imgGray + uint8(filter2(fspecial('prewitt'),imgGray)*sharp_factor); %6.prewitté”åŒ–
-    img_gray_awgn = awgn(double(imgGray), 30, 'measured'); %7.åŠ é«˜æ–¯ç™½å™ªå£°
-    img_gray_resampling = imresize(imresize(imgGray, 0.5), size(imgGray)); %8.é‡é‡‡æ ·
-    img_gray_gammaCorrect = gammaCorrection(imgGray, 1.02, 1.02); %9.gammaæ ¡æ­£
+    % Éú³É9·ù²»Í¬²Ù×÷µÄÍ¼Ïñ£¬ºó±ß¶ÔÓ¦²Ù×÷µÄ¾Í´ÓÕâÈ¡Í¼Ïñ
+    img_gray_homoFilter = HomoFilter(imgGray, 2.2, 0.25, 2, homo_d0); %1Í¬Ì¬ÂË²¨
+    img_gray_medfilt = medfilt2(imgGray, [kernelVal, kernelVal]);%2ÖĞÖµÂË²¨
+    imgTmp = im2double(imgGray); % ¸ÄÎªÄãÒª¶ÁÈëÍ¼Æ¬µÄÂ·¾¶;im2double×÷¹éÒ»»¯´¦Àí
+    % img_gray_saltAndPepper = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density));%3.½·ÑÎÔëÉù
+    img_gray_awgn = awgn(double(imgGray), 30, 'measured'); %3.¼Ó¸ßË¹°×ÔëÉù
+    img_gray_histeq = histeq(imgGray); %4.Ö±·½Í¼¾ùºâ»¯
+    gausFilter = fspecial('gaussian',[kernelVal kernelVal],1); %¸ßË¹ÂË²¨ºË
+    img_gray_gausFilter = imfilter(imgGray, gausFilter, 'replicate'); %5.¸ßË¹ÂË²¨
+	img_gray_prewittSharp = imgGray + uint8(filter2(fspecial('prewitt'),imgGray)*sharp_factor); %6.prewittÈñ»¯
+    img_gray_resampling = imresize(imresize(imgGray, 0.5), size(imgGray)); %7.ÖØ²ÉÑù
+    img_gray_gammaCorrect = gammaCorrection(imgGray, 1.02, 1.02); %8.gammaĞ£Õı
     
-    if is_process_rgb %å¦‚æœæ˜¯ä¸‰é€šé“å›¾åƒ
+    if is_process_rgb %Èç¹ûÊÇÈıÍ¨µÀÍ¼Ïñ
         channelR = imgRgb(:,:,1);
         channelG = imgRgb(:,:,2);
         channelB = imgRgb(:,:,3);
-        clear img_rgb_homoFilter img_rgb_medfilt img_rgb_saltAndPepper img_rgb_histeq img_rgb_gausFilter img_rgb_prewittSharp;
-        % 1.åŒæ€æ»¤æ³¢
-        img_rgb_homoFilter(:,:,1) = HomoFilter(channelR, 2, 0.25, 1, homo_d0); % åŒæ€æ»¤æ³¢
-        img_rgb_homoFilter(:,:,2) = HomoFilter(channelG, 2, 0.25, 1, homo_d0); % åŒæ€æ»¤æ³¢
-        img_rgb_homoFilter(:,:,3) = HomoFilter(channelB, 2, 0.25, 1, homo_d0); % åŒæ€æ»¤æ³¢
-        % 2.ä¸­å€¼æ»¤æ³¢
+        clear img_rgb_homoFilter img_rgb_medfilt img_rgb_saltAndPepper img_rgb_histeq img_rgb_gausFilter img_rgb_prewittSharp img_rgb_resampling img_rgb_gammaCorrect;
+        % 1.Í¬Ì¬ÂË²¨
+        img_rgb_homoFilter(:,:,1) = HomoFilter(channelR, 2, 0.25, 1, homo_d0); % Í¬Ì¬ÂË²¨
+        img_rgb_homoFilter(:,:,2) = HomoFilter(channelG, 2, 0.25, 1, homo_d0); % Í¬Ì¬ÂË²¨
+        img_rgb_homoFilter(:,:,3) = HomoFilter(channelB, 2, 0.25, 1, homo_d0); % Í¬Ì¬ÂË²¨
+        % 2.ÖĞÖµÂË²¨
         img_rgb_medfilt(:,:,1) = medfilt2(channelR, [kernelVal, kernelVal]);
         img_rgb_medfilt(:,:,2) = medfilt2(channelG, [kernelVal, kernelVal]);
         img_rgb_medfilt(:,:,3) = medfilt2(channelB, [kernelVal, kernelVal]);
-        % 3.æ·»åŠ å™ªå£°
-        imgTmp = im2double(channelR); % å½’ä¸€åŒ–å¤„ç†
-        img_rgb_saltAndPepper(:,:,1) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %æ·»åŠ å¯†åº¦ä¸º5%çš„æ¤’ç›å™ªå£°
-        imgTmp = im2double(channelG); % å½’ä¸€åŒ–å¤„ç†
-        img_rgb_saltAndPepper(:,:,2) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %æ·»åŠ å¯†åº¦ä¸º5%çš„æ¤’ç›å™ªå£°
-        imgTmp = im2double(channelB); % å½’ä¸€åŒ–å¤„ç†
-        img_rgb_saltAndPepper(:,:,3) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %æ·»åŠ å¯†åº¦ä¸º5%çš„æ¤’ç›å™ªå£°
-        % 4.ç›´æ–¹å›¾å‡è¡¡åŒ–
+        %{
+        % 3.Ìí¼ÓÔëÉù
+        imgTmp = im2double(channelR); % ¹éÒ»»¯´¦Àí
+        img_rgb_saltAndPepper(:,:,1) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %Ìí¼ÓÃÜ¶ÈÎª5%µÄ½·ÑÎÔëÉù
+        imgTmp = im2double(channelG); % ¹éÒ»»¯´¦Àí
+        img_rgb_saltAndPepper(:,:,2) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %Ìí¼ÓÃÜ¶ÈÎª5%µÄ½·ÑÎÔëÉù
+        imgTmp = im2double(channelB); % ¹éÒ»»¯´¦Àí
+        img_rgb_saltAndPepper(:,:,3) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %Ìí¼ÓÃÜ¶ÈÎª5%µÄ½·ÑÎÔëÉù
+        %}
+        % 3.¼Ó¸ßË¹°×ÔëÉù        
+        img_rgb_awgn = awgn(double(imgRgb), 30, 'measured');
+        % 4.Ö±·½Í¼¾ùºâ»¯
         img_rgb_histeq(:,:,1) = histeq(channelR);
         img_rgb_histeq(:,:,2) = histeq(channelG);
         img_rgb_histeq(:,:,3) = histeq(channelB);
-        % 5.é«˜æ–¯æ»¤æ³¢
+        % 5.¸ßË¹ÂË²¨
         img_rgb_gausFilter(:,:,1) = imfilter(channelR, gausFilter, 'replicate');
         img_rgb_gausFilter(:,:,2) = imfilter(channelG, gausFilter, 'replicate');
         img_rgb_gausFilter(:,:,3) = imfilter(channelB, gausFilter, 'replicate');
-        % 6.prewitté”åŒ–
-        img_rgb_prewittSharp(:,:,1) = channelR + uint8(filter2(fspecial('prewitt'),channelR)*sharp_factor); %prewitté”åŒ–
-        img_rgb_prewittSharp(:,:,2) = channelG + uint8(filter2(fspecial('prewitt'),channelG)*sharp_factor); %prewitté”åŒ–
-        img_rgb_prewittSharp(:,:,3) = channelB + uint8(filter2(fspecial('prewitt'),channelB)*sharp_factor); %prewitté”åŒ–
-        % 7.åŠ é«˜æ–¯ç™½å™ªå£°
-        img_rgb_awgn = awgn(double(imgRgb), 30, 'measured');
-        % 8.é‡é‡‡æ ·
+        % 6.prewittÈñ»¯
+        img_rgb_prewittSharp(:,:,1) = channelR + uint8(filter2(fspecial('prewitt'),channelR)*sharp_factor); %prewittÈñ»¯
+        img_rgb_prewittSharp(:,:,2) = channelG + uint8(filter2(fspecial('prewitt'),channelG)*sharp_factor); %prewittÈñ»¯
+        img_rgb_prewittSharp(:,:,3) = channelB + uint8(filter2(fspecial('prewitt'),channelB)*sharp_factor); %prewittÈñ»¯
+        % 7.ÖØ²ÉÑù
         img_rgb_resampling = imresize3(imresize(imgRgb, 0.5), size(imgRgb));
+        % 8.gamma±ä»»
+        img_rgb_gammaCorrect(:,:,1) = gammaCorrection(channelR, 1.02, 1.02);
+        img_rgb_gammaCorrect(:,:,2) = gammaCorrection(channelG, 1.02, 1.02);
+        img_rgb_gammaCorrect(:,:,3) = gammaCorrection(channelB, 1.02, 1.02);
         
         clear channelR channelG channelB imgTmp;
     end
 
-    % æ˜¾ç¤ºè°ƒè¯•
+    % ÏÔÊ¾µ÷ÊÔ
     %{
     figure (1)
     subplot(2,7,1)
@@ -196,24 +201,24 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         subplot(2,7,14)
         imshow(img_rgb_prewittSharp);
     end
-    close 1; %å…³é—­figure
+    close 1; %¹Ø±Õfigure
     %}
 
-    % éšæœºç”Ÿæˆ å½“å‰å›¾ç‰‡éœ€è¦è¿›è¡Œå‡ æ¬¡æ“ä½œ
+    % Ëæ»úÉú³É µ±Ç°Í¼Æ¬ĞèÒª½øĞĞ¼¸´Î²Ù×÷
     objectNum = randi([1, Maximum_number_of_targets]);
         
-    % éšæœºç”Ÿæˆå¤šç§æ“ä½œç±»å‹(ç›®æ ‡ç±»åˆ«)ä»¥åŠå¯¹åº”çš„ç§å­åæ ‡
+    % Ëæ»úÉú³É¶àÖÖ²Ù×÷ÀàĞÍ(Ä¿±êÀà±ğ)ÒÔ¼°¶ÔÓ¦µÄÖÖ×Ó×ø±ê
     labelSet = zeros(objectNum,1);
     seedCoordinateSet = zeros(objectNum,2);
     for i = 1 : objectNum
-        labelSet(i,1) = randi([1, 6]);
+        labelSet(i,1) = randi([1, 8]);
 %         labelSet(i,1) = 4;
-        seedCoordinateSet(i,1) = randi([5, cols-5]);%ä¸è¦å¤ªé è¾¹ä¸Š
+        seedCoordinateSet(i,1) = randi([5, cols-5]);%²»ÒªÌ«¿¿±ßÉÏ
         seedCoordinateSet(i,2) = randi([5, rows-5]);
     end
     
-    % å¯¹å›¾åƒå„ç§å­ç‚¹è¿›è¡Œç”Ÿé•¿
-    img_gray_mask = zeros([size(imgGray),objectNum+1]);%ä¿å­˜å„ä¸ªç”Ÿæˆçš„ç›®æ ‡åŒºåŸŸæ¨¡æ¿å’Œæœ€åä¸€ä¸ªåˆæˆæ¨¡æ¿mask
+    % ¶ÔÍ¼Ïñ¸÷ÖÖ×Óµã½øĞĞÉú³¤
+    img_gray_mask = zeros([size(imgGray),objectNum+1]);%±£´æ¸÷¸öÉú³ÉµÄÄ¿±êÇøÓòÄ£°åºÍ×îºóÒ»¸öºÏ³ÉÄ£°åmask
     for i = 1 : objectNum
         step = randi(step_range_control_the_size_of_object);
         if the_region_of_opera == "irregular"
@@ -223,10 +228,10 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         end
     end
     
-    % å¦‚æœä¸å…è®¸ç›®æ ‡é‡åˆï¼Œè¿›è¡Œå¤„ç†
-    overlapIdxSet = zeros(1,objectNum); %å­˜æ”¾é‡åˆæ•°ç»„çš„maskä»£å·
+    % Èç¹û²»ÔÊĞíÄ¿±êÖØºÏ£¬½øĞĞ´¦Àí
+    overlapIdxSet = zeros(1,objectNum); %´æ·ÅÖØºÏÊı×éµÄmask´úºÅ
     if ~is_allow_objects_to_overlap
-        for i = 2 : objectNum %å†’æ³¡å¤„ç†
+        for i = 2 : objectNum %Ã°Åİ´¦Àí
             for j = 1 : i-1
             	[img_gray_mask(:,:,j), img_gray_mask(:,:,i), is_overlap] = eliminate_overlap(img_gray_mask(:,:,j), img_gray_mask(:,:,i));
                 if is_overlap == true
@@ -236,17 +241,17 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         end
     end
     
-    % åˆ é™¤é‡åˆæ— æ•ˆçš„æ•°æ®
+    % É¾³ıÖØºÏÎŞĞ§µÄÊı¾İ
     overlapIdx = find(overlapIdxSet == 1);
     objectNum = objectNum - size(overlapIdx,2);
     img_gray_mask(:,:,overlapIdx) = [];
     
-    % æ‰€æœ‰maskå åŠ 
+    % ËùÓĞmaskµş¼Ó
     for i = 1 : objectNum
         img_gray_mask(:,:,end) = img_gray_mask(:,:,end) + img_gray_mask(:,:,i);
     end
     
-    % è®¡ç®—æ¯ä¸ªçš„å®½é«˜
+    % ¼ÆËãÃ¿¸öµÄ¿í¸ß
     object_info = zeros(objectNum,21);
     pg_point_set = zeros(objectNum, 8);
     for i = 1 : objectNum
@@ -256,20 +261,20 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         [left,top,w,h,cx,cy,right,bottom,area,cx_rate,cy_rate,w_rate,h_rate] = get_box_of_object(img_gray_mask(:,:,i)); 
         object_info(i,4:16) = [left,top,w,h,cx,cy,right,bottom,area,cx_rate,cy_rate,w_rate,h_rate];
         
-        % 20210122 æ¯ä¸ªå•å±‚maskè¿›è¡Œæœ€å¤§å æ¯”å¹³è¡Œå››è¾¹å½¢è®¡ç®—
+        % 20210122 Ã¿¸öµ¥²ãmask½øĞĞ×î´óÕ¼±ÈÆ½ĞĞËÄ±ßĞÎ¼ÆËã
         [pg_x, pg_y, pg_side1, pg_side2, pg_theta, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y] = Parallelogram_det(img_gray_mask(:,:,i));
         object_info(i,17:21) = [pg_x, pg_y, pg_side1, pg_side2, pg_theta];
         pg_point_set(i,1:8) = [p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y];
     end
     clear left top w h cx cy right bottom area;
     
-    % åœ¨è¾“å‡ºå›¾åƒä¸Šå åŠ å„æ“ä½œ
+    % ÔÚÊä³öÍ¼ÏñÉÏµş¼Ó¸÷²Ù×÷
     grayOut = imgGray;
     if is_process_rgb
         rgbOut = imgRgb;
     end
     for i = 1 : objectNum
-        region = regionprops(img_gray_mask(:,:,i), 'PixelList'); %è·å–æ‰€æœ‰åƒç´ 
+        region = regionprops(img_gray_mask(:,:,i), 'PixelList'); %»ñÈ¡ËùÓĞÏñËØ
         pixel_list = region.PixelList;
         switch labelSet(i,1)
             case 1
@@ -287,21 +292,29 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
                     end
                 end
             case 3
+                %{
                 for j = 1 : size(pixel_list,1)
                     grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_saltAndPepper(pixel_list(j,2),pixel_list(j,1));
                     if is_process_rgb
                         rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_saltAndPepper(pixel_list(j,2),pixel_list(j,1),:);
                     end
                 end
+                %}
+                for j = 1 : size(pixel_list,1)
+                    grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_awgn(pixel_list(j,2),pixel_list(j,1));
+                    if is_process_rgb
+                        rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_awgn(pixel_list(j,2),pixel_list(j,1),:);
+                    end
+                end
             case 4
-                % å…ˆæ•´å›¾ç›´æ–¹å›¾å‡è¡¡åŒ–ï¼Œç„¶åå–ä¸è§„åˆ™åŒºåŸŸ
+                % ÏÈÕûÍ¼Ö±·½Í¼¾ùºâ»¯£¬È»ºóÈ¡²»¹æÔòÇøÓò
                 for j = 1 : size(pixel_list,1)
                     grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_histeq(pixel_list(j,2),pixel_list(j,1));
                     if is_process_rgb
                         rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_histeq(pixel_list(j,2),pixel_list(j,1),:);
                     end
                 end
-                % å…ˆå–ä¸è§„åˆ™åŒºåŸŸ, ç„¶åå±€éƒ¨ç›´æ–¹å›¾å‡è¡¡åŒ–
+                % ÏÈÈ¡²»¹æÔòÇøÓò, È»ºó¾Ö²¿Ö±·½Í¼¾ùºâ»¯
                 %{
                 grayOut = histeq_in_local_irregular_area(grayOut, img_gray_mask(:,:,i));
                 if is_process_rgb
@@ -324,12 +337,26 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
                         rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_prewittSharp(pixel_list(j,2),pixel_list(j,1),:);
                     end
                 end
+            case 7
+                for j = 1 : size(pixel_list,1)
+                    grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_resampling(pixel_list(j,2),pixel_list(j,1));
+                    if is_process_rgb
+                        rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_resampling(pixel_list(j,2),pixel_list(j,1),:);
+                    end
+                end
+            case 8
+                for j = 1 : size(pixel_list,1)
+                    grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_gammaCorrect(pixel_list(j,2),pixel_list(j,1));
+                    if is_process_rgb
+                        rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_gammaCorrect(pixel_list(j,2),pixel_list(j,1),:);
+                    end
+                end
             otherwise
                 disp('labelIdx out of range');
         end
     end
 
-    % ç»˜åˆ¶çŸ©å½¢æ¡†
+    % »æÖÆ¾ØĞÎ¿ò
     grayOutWithBox = grayOut;
     if is_process_rgb
         rgbOutWithBox = rgbOut;
@@ -341,23 +368,29 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         position(i,1:4) = object_info(i,4:7);
         switch object_info(i,1)
             case 1
-                label_str{i} = 'homoFilt';
+                label_str{i} = 'homofilt';
                 color{i} = 'cyan';
             case 2
-                label_str{i} = 'mediFilt';
+                label_str{i} = 'medianfilt';
                 color{i} = 'blue';
             case 3
-                label_str{i} = 'addNoise';
+                label_str{i} = 'addnoise';
                 color{i} = 'green';
             case 4
-                label_str{i} = 'histgrEq';
+                label_str{i} = 'histeq';
                 color{i} = 'magenta';
             case 5
-                label_str{i} = 'gausFilt';
+                label_str{i} = 'gaussfilt';
                 color{i} = 'black';
             case 6
-                label_str{i} = 'prewShap';
+                label_str{i} = 'sharp';
                 color{i} = 'red';
+            case 7
+                label_str{i} = 'resampling';
+                color{i} = 'white';
+            case 8
+                label_str{i} = 'gamma';
+                color{i} = 'black';
             otherwise
                 disp('class out of range');
         end
@@ -367,7 +400,7 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         rgbOutWithBox = insertObjectAnnotation(rgbOutWithBox, 'rectangle', position, label_str,'color', color, 'textcolor', 'black', 'LineWidth', 1);
     end
     
-    % 20210122ç»˜åˆ¶å¹³è¡Œå››è¾¹å½¢
+    % 20210122»æÖÆÆ½ĞĞËÄ±ßĞÎ
     h = figure(1);
     imshow(grayOutWithBox,'InitialMagnification','fit');
     for i = 1 : objectNum
@@ -391,22 +424,22 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
         close all;
     end
     
-    % ä¿å­˜å›¾åƒæ–‡ä»¶
-    imwrite(imgGray, picGrayPath{1}, 'Compression','none');%jpgå­˜åœ¨å‹ç¼©ï¼Œè€ƒè™‘pngæ— å‹ç¼©ä¿å­˜
+    % ±£´æÍ¼ÏñÎÄ¼ş
+    imwrite(imgGray, picGrayPath{1}, 'Compression','none');%jpg´æÔÚÑ¹Ëõ£¬¿¼ÂÇpngÎŞÑ¹Ëõ±£´æ
     imwrite(grayOut, picGrayOutPath{1}, 'Compression','none');
-%     imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
+    % imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
     imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
     imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
-%     imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
+    % imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
     imwrite(img_gray_mask(:,:,end), picMask{1}, 'Compression','none');
     
-    % ä¿å­˜æ–‡æœ¬æ–‡ä»¶
+    % ±£´æÎÄ±¾ÎÄ¼ş
     txt_yolo_path = strcat(imgDataOutPath,'\','yolo_label_txt','\',imgDataDir(picCount).name);
-    txt_yolo_path = strrep(txt_yolo_path, '.png', '.txt');
+    txt_yolo_path = strrep(txt_yolo_path, '.jpg', '.txt');
     xml_yolo_path = strcat(imgDataOutPath,'\','yolo_label_xml','\',imgDataDir(picCount).name);
-    xml_yolo_path = strrep(xml_yolo_path, '.png', '.xml');
+    xml_yolo_path = strrep(xml_yolo_path, '.jpg', '.xml');
     xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info_path','\',imgDataDir(picCount).name);
-    xlsx_all_info_path = strrep(xlsx_all_info_path, '.png', '.xlsx');
+    xlsx_all_info_path = strrep(xlsx_all_info_path, '.jpg', '.xlsx');
     txt_yolo_data = zeros(objectNum, 5);
     for i = 1 : objectNum
         txt_yolo_data(i,1) = object_info(i,1);
@@ -414,27 +447,27 @@ for picCount = 1:length(imgDataDir) % éå†æ‰€æœ‰å›¾ç‰‡æ–‡ä»¶
     end
     dlmwrite(txt_yolo_path, txt_yolo_data, 'delimiter',' ');
     xlswrite(xlsx_all_info_path, object_info);
-    % æ¥ä¸‹æ¥å†™xml
+    % ½ÓÏÂÀ´Ğ´xml
     write_xml(xml_yolo_path, [cols,rows,3], object_info, labelStrSet)
     
-    % ç»“æŸäº†å•å¼ å›¾ç‰‡å¤„ç†
+    % ½áÊøÁËµ¥ÕÅÍ¼Æ¬´¦Àí
 %     disp('endok');
-    % è°ƒè¯•æ˜¾ç¤º
+    % µ÷ÊÔÏÔÊ¾
 %     figure (2)
 %     subplot(1,2,1)
 %     imshow(rgbOutWithBox);
-%     close 2; %å…³é—­figure
+%     close 2; %¹Ø±Õfigure
     
-    % æ˜¾ç¤ºé€Ÿåº¦è¿›ç¨‹
+    % ÏÔÊ¾ËÙ¶È½ø³Ì
     if mod(picCount, 10) == 0
         disp(['n:', num2str(picCount), '/', num2str(imgCountTotal)]);
-        % æš‚åœ0.1s
-        pause(0.1);
+        % ÔİÍ£0.1s
+        pause(0.05);
     end
     
-end %ç»“æŸäº†æ‰€æœ‰å›¾ç‰‡å¤„ç†
+end %½áÊøÁËËùÓĞÍ¼Æ¬´¦Àí
 
-% ç»“æŸ
+% ½áÊø
 toc;
-fprintf('å³æ—¶é—´ï¼š%f h\n', toc/3600);
+fprintf('¼´Ê±¼ä£º%f h\n', toc/3600);
 disp('end');

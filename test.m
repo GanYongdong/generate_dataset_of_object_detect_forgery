@@ -30,4 +30,3 @@ img_gray_resampling = imresize(img2, size(imgSrc,2));
 % imshow(uint8(y1));
 % subplot(2,2,3)
 % imshow(uint8(y2));
-

@@ -6,7 +6,7 @@ p3x = 200;
 p3y = 200;
 p4x = 100;
 p4y = 200;
-img1 = imread('D:\Dataset\pictures\ä¸è§„åˆ™1.png');
+img1 = imread('D:\Dataset\pictures\²»¹æÔò1.png');
 img = rgb2gray(img1);
 img2 = imresize(img, 0.5);
 [rows,cols]=size(img2);
@@ -18,7 +18,7 @@ line([p1x,p2x],[p1y,p2y]);
 saveas(h, 'D:\Dataset\1234', 'png');
 close all;
 
-% img1 = imread('D:\Dataset\pictures\ä¸è§„åˆ™1.png');
+% img1 = imread('D:\Dataset\pictures\²»¹æÔò1.png');
 % img = rgb2gray(img1);
 % img2 = imresize(img, 0.5);
 % % img2 = 1 - img2;
@@ -36,16 +36,16 @@ close all;
 % pg_bot = pg_bot(2);
 % 
 % imgB = imgB{1};
-% num_imgB_point = size(imgB,1); %ä¸€å…±å¤šå°‘è¾¹ç•Œç‚¹
-% intersec_point_set = zeros(180, 6); %1.ç¬¬ä¸€ä¸ªäº¤ç‚¹ç´¢å¼• 2.ç¬¬äºŒä¸ªäº¤ç‚¹ç´¢å¼• 3.é¢ç§¯ 4.çœŸå®é¢ç§¯å æ¯”ä¾‹ 5.æ–œè¾¹1é•¿åº¦ 6.åº•è¾¹2é•¿åº¦
+% num_imgB_point = size(imgB,1); %Ò»¹²¶àÉÙ±ß½çµã
+% intersec_point_set = zeros(180, 6); %1.µÚÒ»¸ö½»µãË÷Òı 2.µÚ¶ş¸ö½»µãË÷Òı 3.Ãæ»ı 4.ÕæÊµÃæ»ıÕ¼±ÈÀı 5.Ğ±±ß1³¤¶È 6.µ×±ß2³¤¶È
 % for i = 1 : 180
-%     k = tan(i*pi/180); %æ–œç‡
+%     k = tan(i*pi/180); %Ğ±ÂÊ
 %     if i < 90
 %         b = rows;
 %     else
 %         b = 0;
 %     end
-%     dis_set = zeros(num_imgB_point,1); %å­˜å‚¨å½“å‰è§’åº¦ä¸‹ï¼Œæ‰€æœ‰è¾¹ç•Œç‚¹åˆ°ç›´çº¿çš„è·ç¦»
+%     dis_set = zeros(num_imgB_point,1); %´æ´¢µ±Ç°½Ç¶ÈÏÂ£¬ËùÓĞ±ß½çµãµ½Ö±ÏßµÄ¾àÀë
 %     for m = 1 : num_imgB_point
 %         x0 = imgB(m,2);
 %         y0 = imgB(m,1);
@@ -53,21 +53,21 @@ close all;
 %     end
 %     [intersec_point_set(i,1),~]=find(dis_set==max(max(dis_set)),1,'first');
 %     [intersec_point_set(i,2),~]=find(dis_set==min(min(dis_set)),1,'first');
-%     x1 = imgB(intersec_point_set(i,1),2);%ç¬¬ä¸€æ¡æ–œçº¿
+%     x1 = imgB(intersec_point_set(i,1),2);%µÚÒ»ÌõĞ±Ïß
 %     y1 = imgB(intersec_point_set(i,1),1);
 %     b1 = y1 - k*x1;
-%     x2 = imgB(intersec_point_set(i,2),2);%ç¬¬äºŒæ¡æ–œçº¿
+%     x2 = imgB(intersec_point_set(i,2),2);%µÚ¶şÌõĞ±Ïß
 %     y2 = imgB(intersec_point_set(i,2),1);
 %     b2 = y2 - k*x2;
-%     [x3,y3] = point_of_two_line(k,b1,0,pg_top);%ç¬¬ä¸€æ¡æ–œçº¿å’Œä¸Šè¾¹äº¤ç‚¹
-%     [x4,y4] = point_of_two_line(k,b1,0,pg_bot);%ç¬¬ä¸€æ¡æ–œçº¿å’Œä¸‹è¾¹äº¤ç‚¹
-%     [x5,y5] = point_of_two_line(k,b2,0,pg_top);%ç¬¬äºŒæ¡æ–œçº¿å’Œä¸Šè¾¹äº¤ç‚¹
-%     dis_p3p4 = sqrt((x3-x4)*(x3-x4)+(y3-y4)*(y3-y4)); %æ–œè¾¹1é•¿åº¦
-%     dis_p3p5 = sqrt((x3-x5)*(x3-x5)+(y3-y5)*(y3-y5)); %åº•è¾¹2é•¿åº¦
-%     dis_l1l2 = abs(b1-b2)/sqrt(k*k+1); %ä¸¤æ¡å¹³è¡Œæ–œçº¿ä¹‹é—´çš„è·ç¦»
-%     pg_area = dis_p3p4 * dis_l1l2; %å¹³è¡Œå››è¾¹å½¢é¢ç§¯
+%     [x3,y3] = point_of_two_line(k,b1,0,pg_top);%µÚÒ»ÌõĞ±ÏßºÍÉÏ±ß½»µã
+%     [x4,y4] = point_of_two_line(k,b1,0,pg_bot);%µÚÒ»ÌõĞ±ÏßºÍÏÂ±ß½»µã
+%     [x5,y5] = point_of_two_line(k,b2,0,pg_top);%µÚ¶şÌõĞ±ÏßºÍÉÏ±ß½»µã
+%     dis_p3p4 = sqrt((x3-x4)*(x3-x4)+(y3-y4)*(y3-y4)); %Ğ±±ß1³¤¶È
+%     dis_p3p5 = sqrt((x3-x5)*(x3-x5)+(y3-y5)*(y3-y5)); %µ×±ß2³¤¶È
+%     dis_l1l2 = abs(b1-b2)/sqrt(k*k+1); %Á½ÌõÆ½ĞĞĞ±ÏßÖ®¼äµÄ¾àÀë
+%     pg_area = dis_p3p4 * dis_l1l2; %Æ½ĞĞËÄ±ßĞÎÃæ»ı
 %     intersec_point_set(i, 3) = pg_area;
-%     intersec_point_set(i, 4) = area / pg_area; %è®¡ç®—ä¸åŒè§’åº¦ä¸‹ï¼Œå®é™…ç›®æ ‡é¢ç§¯å æ¯”å¹³è¡Œå››è¾¹å½¢
+%     intersec_point_set(i, 4) = area / pg_area; %¼ÆËã²»Í¬½Ç¶ÈÏÂ£¬Êµ¼ÊÄ¿±êÃæ»ıÕ¼±ÈÆ½ĞĞËÄ±ßĞÎ
 %     intersec_point_set(i, 5) = dis_p3p4;
 %     intersec_point_set(i, 6) = dis_p3p5;
 %     if intersec_point_set(i, 4) > 1
