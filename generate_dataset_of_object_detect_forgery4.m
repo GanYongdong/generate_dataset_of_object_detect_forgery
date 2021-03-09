@@ -60,7 +60,9 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     picGrayOutPath = strcat(imgDataOutPath,'\','grayOut','\',pngFileName);
     picGrayWithBoxOutPath = strcat(imgDataOutPath,'\','grayOutWithBox','\',pngFileName);
     picRgbPath = strcat(imgDataOutPath,'\','rgb','\',pngFileName);
-    picRgbOutPath = strcat(imgDataOutPath,'\','rgbOut','\',pngFileName);
+    picRgbOutPath = strcat(imgDataOutPath,'\','rgbOutPng','\',pngFileName);
+    picRgbJpgPath = strcat(imgDataOutPath,'\','rgbOutJpg','\',pngFileName);
+    picRgbJpgOutPath = strrep(picRgbJpgPath,'png','jpg');
     picRgbWithBoxOutPath = strcat(imgDataOutPath,'\','rgbOutWithBox','\',pngFileName);
     picMask = strcat(imgDataOutPath,'\','picMask','\',pngFileName);
     clear strTmp2;
@@ -263,7 +265,10 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
         
         % 20210122 每个单层mask进行最大占比平行四边形计算
         [pg_x, pg_y, pg_side1, pg_side2, pg_theta, p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y] = Parallelogram_det(img_gray_mask(:,:,i));
-        object_info(i,17:21) = [pg_x, pg_y, pg_side1, pg_side2, pg_theta];
+        
+        [top_left_x, top_left_y, bottom_right_x, bottom_right_y] = get_top_left_and_bottom_right(p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y);
+        % object_info(i,17:21) = [pg_x, pg_y, pg_side1, pg_side2, pg_theta];
+        object_info(i,17:21) = [top_left_x, top_left_y, bottom_right_x, bottom_right_y, pg_theta];
         pg_point_set(i,1:8) = [p1x, p1y, p2x, p2y, p3x, p3y, p4x, p4y];
     end
     clear left top w h cx cy right bottom area;
@@ -430,15 +435,16 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     % imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
     imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
     imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
+    imwrite(rgbOut, picRgbJpgOutPath{1}, 'Compression','none');
     % imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
     imwrite(img_gray_mask(:,:,end), picMask{1}, 'Compression','none');
     
     % 保存文本文件
     txt_yolo_path = strcat(imgDataOutPath,'\','yolo_label_txt','\',imgDataDir(picCount).name);
     txt_yolo_path = strrep(txt_yolo_path, '.jpg', '.txt');
-    xml_yolo_path = strcat(imgDataOutPath,'\','yolo_label_xml','\',imgDataDir(picCount).name);
+    xml_yolo_path = strcat(imgDataOutPath,'\','voc_label_xml','\',imgDataDir(picCount).name);
     xml_yolo_path = strrep(xml_yolo_path, '.jpg', '.xml');
-    xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info_path','\',imgDataDir(picCount).name);
+    xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info','\',imgDataDir(picCount).name);
     xlsx_all_info_path = strrep(xlsx_all_info_path, '.jpg', '.xlsx');
     txt_yolo_data = zeros(objectNum, 5);
     for i = 1 : objectNum
@@ -448,7 +454,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     dlmwrite(txt_yolo_path, txt_yolo_data, 'delimiter',' ');
     xlswrite(xlsx_all_info_path, object_info);
     % 接下来写xml
-    write_xml(xml_yolo_path, [cols,rows,3], object_info, labelStrSet)
+    write_xml_pg(xml_yolo_path, [cols,rows,3], object_info, labelStrSet)
     
     % 结束了单张图片处理
 %     disp('endok');
@@ -466,6 +472,10 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
     
 end %结束了所有图片处理
+
+% 调用python脚本，生成darknet yolo需要的txt label
+disp('图片和部分标签生成成功，接下来调用python脚本，生成darknet yolo需要的txt label，把所有图片标注信息放到一个txt文件中......');
+[status,cmdout]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\get_darknet_yolo_txt.py');
 
 % 结束
 toc;

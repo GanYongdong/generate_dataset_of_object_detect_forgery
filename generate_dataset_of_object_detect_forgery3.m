@@ -21,8 +21,8 @@ the_region_of_opera = "irregular"; %进行操作的区域形状，可选"irregular"和"retang
 % generate_retangle_areas_based_on_one_point.m
 Maximum_number_of_targets = 8; % 每张图片最大目标个数
 Maximum_proportion_of_target_in_image = 0.4; % 目标占图像最大比例
-imgDataPath = 'D:\Research\dataset\dataset_detect_forgery\src10'; %源图像目录
-imgDataOutPath = 'D:\Research\dataset\dataset_detect_forgery\datasetTmp'; %输出图像目录
+imgDataPath = 'D:\Dataset\VOC2012_JPEGImages'; %源图像目录
+imgDataOutPath = 'D:\Research\My_tamper_detect_dataset_generate\dataset_tmp'; %输出图像目录
 kernel_range = [3,3]; %均值滤波、中值滤波和高斯滤波选择进行操作的内核尺寸范围，一行两列，小的在前，大的在后，相等就是固定大小
 saltAndPepper_density = 0.03; %椒盐噪声密度
 homo_d0 = 0.008; %同态滤波的D0参数值
@@ -204,8 +204,8 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     labelSet = zeros(objectNum,1);
     seedCoordinateSet = zeros(objectNum,2);
     for i = 1 : objectNum
-%         labelSet(i,1) = randi([1, 6]);
-        labelSet(i,1) = 4;
+        labelSet(i,1) = randi([1, 8]);
+%         labelSet(i,1) = 4;
         seedCoordinateSet(i,1) = randi([5, cols-5]);%不要太靠边上
         seedCoordinateSet(i,2) = randi([5, rows-5]);
     end
@@ -314,6 +314,20 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
                         rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_prewittSharp(pixel_list(j,2),pixel_list(j,1),:);
                     end
                 end
+            case 7
+                for j = 1 : size(pixel_list,1)
+                    grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_awgn(pixel_list(j,2),pixel_list(j,1));
+                    if is_process_rgb
+                        rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_awgn(pixel_list(j,2),pixel_list(j,1),:);
+                    end
+                end
+            case 8
+                for j = 1 : size(pixel_list,1)
+                    grayOut(pixel_list(j,2),pixel_list(j,1)) = img_gray_resampling(pixel_list(j,2),pixel_list(j,1));
+                    if is_process_rgb
+                        rgbOut(pixel_list(j,2),pixel_list(j,1),:) = img_rgb_resampling(pixel_list(j,2),pixel_list(j,1),:);
+                    end
+                end
             otherwise
                 disp('labelIdx out of range');
         end
@@ -348,6 +362,12 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
             case 6
                 label_str{i} = 'prewShap';
                 color{i} = 'red';
+            case 7
+                label_str{i} = 'awgn';
+                color{i} = 'white';
+            case 8
+                label_str{i} = 'resampling';
+                color{i} = 'red';
             otherwise
                 disp('class out of range');
         end
@@ -371,7 +391,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     txt_yolo_path = strrep(txt_yolo_path, '.jpg', '.txt');
     xml_yolo_path = strcat(imgDataOutPath,'\','yolo_label_xml','\',imgDataDir(picCount).name);
     xml_yolo_path = strrep(xml_yolo_path, '.jpg', '.xml');
-    xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info_path','\',imgDataDir(picCount).name);
+    xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info','\',imgDataDir(picCount).name);
     xlsx_all_info_path = strrep(xlsx_all_info_path, '.jpg', '.xlsx');
     txt_yolo_data = zeros(objectNum, 5);
     for i = 1 : objectNum
@@ -399,6 +419,10 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
     
 end %结束了所有图片处理
+
+% 调用python脚本，生成darknet yolo需要的txt label
+disp('图片和部分标签生成成功，接下来调用python脚本，生成darknet yolo需要的txt label......');
+[status,cmdout]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\get_darknet_yolo_txt.py');
 
 % 结束
 toc;

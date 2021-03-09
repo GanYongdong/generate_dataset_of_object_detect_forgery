@@ -2,6 +2,13 @@
 
 ![](https://img.shields.io/static/v1?label=matlab&message=2019&color=blue)
 
+## 2021.3.9
+
+当前是八种操作类型
+4.m是平行四边形框
+添加的write_xml_pg.m是保存平行四边形label信息的，保存的是平行四边形左上顶点和右下顶点坐标以及theta角度
+将保存操作后的图片添加一种jpg格式的，但是图像质量要求要高，'Compression','none'，文档介绍是无压缩，没有验证过
+
 ## 2020.10.8
 
 增加了prewitt锐化类别
