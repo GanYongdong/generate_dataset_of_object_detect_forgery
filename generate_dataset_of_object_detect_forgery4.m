@@ -211,7 +211,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
         
     % 随机生成多种操作类型(目标类别)以及对应的种子坐标
     labelSet = zeros(objectNum,1);
-    seedCoordinateSet = zeros(objectNum,2);
+    seedCoordinateSet = zeros(objectNum,2, 'gpuArray');
     for i = 1 : objectNum
         labelSet(i,1) = randi([1, 8]);
 %         labelSet(i,1) = 4;
@@ -435,9 +435,9 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     % imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
     imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
     imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
-    imwrite(rgbOut, picRgbJpgOutPath{1}, 'Compression','none');
+    imwrite(rgbOut, picRgbJpgOutPath{1});
     % imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
-    imwrite(img_gray_mask(:,:,end), picMask{1}, 'Compression','none');
+    imwrite(img_gray_mask(:,:,end), picMask{1},'Compression','none');
     
     % 保存文本文件
     txt_yolo_path = strcat(imgDataOutPath,'\','yolo_label_txt','\',imgDataDir(picCount).name);
