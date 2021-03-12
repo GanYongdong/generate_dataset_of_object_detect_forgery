@@ -20,7 +20,7 @@ the_region_of_opera = "irregular"; %进行操作的区域形状，可选"irregular"和"retang
 % generate_retangle_areas_based_on_one_point.m
 Maximum_number_of_targets = 8; % 每张图片最大目标个数
 Maximum_proportion_of_target_in_image = 0.4; % 目标占图像最大比例
-imgDataPath = 'D:\Dataset\VOC2012_JPEGImages'; %源图像目录
+imgDataPath = 'D:\Dataset\PASCAL_VOC\VOCtrainval_2012\VOC2012\JPEGImages'; %源图像目录
 imgDataOutPath = 'D:\Research\My_tamper_detect_dataset_generate\dataset_tmp'; %输出图像目录
 kernel_range = [3,3]; %均值滤波、中值滤波和高斯滤波选择进行操作的内核尺寸范围，一行两列，小的在前，大的在后，相等就是固定大小
 saltAndPepper_density = 0.03; %椒盐噪声密度
@@ -28,6 +28,7 @@ homo_d0 = 0.008; %同态滤波的D0参数值
 sharp_factor = 0.7; %锐化程度[0,1]
 step_range_control_the_size_of_object = [25,45]; %控制生成的目标大小的参数，能够大概控制,相等就是几乎固定大小
 factor_of_imgSrc_zoom = 0.6; %对源图像缩放倍数，可以控制输出图像尺寸，加快部分网络训练速度。这是在进行操作之前缩放，不影响操作质量。
+is_parallelogram = logical(true); %是否生成平行四边形标签，无论如何矩形标签都默认会生成
 
 % 计时开始
 tic;
@@ -37,11 +38,18 @@ count = 1;
 labelStrSet = ["homofilt"; "medianfilt"; "addnoise"; "histeq"; "gaussfilt"; "sharp"; "resampling"; "gamma"];
 % 最终保存的lable容器和box容器
 
+% 写label_list文件
+label_list_txt = strcat(imgDataOutPath, '\voc_dataset\label_list.txt');
+label_list = cellstr(labelStrSet);
+T = cell2table(label_list);
+writetable(T,label_list_txt);
+clear label_list_txt label_list T;
+
 % 对不同图像循环
 imgDataDir = dir(imgDataPath);
 imgCountTotal = size(imgDataDir,1) - 2;
 for picCount = 1:length(imgDataDir) % 遍历所有图片文件
-    
+
     % for picCount = 1:20 % 遍历所有文件
     if(isequal(imgDataDir(picCount).name,'.') || isequal(imgDataDir(picCount).name,'..'))
         % 去除系统自带的两个隐文件夹
@@ -406,44 +414,42 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
     
     % 20210122绘制平行四边形
-    h = figure(1);
-    imshow(grayOutWithBox,'InitialMagnification','fit');
-    for i = 1 : objectNum
-        line([pg_point_set(i,1),pg_point_set(i,3)],[pg_point_set(i,2),pg_point_set(i,4)],'linewidth',3);
-        line([pg_point_set(i,3),pg_point_set(i,5)],[pg_point_set(i,4),pg_point_set(i,6)],'linewidth',3);
-        line([pg_point_set(i,5),pg_point_set(i,7)],[pg_point_set(i,6),pg_point_set(i,8)],'linewidth',3);
-        line([pg_point_set(i,7),pg_point_set(i,1)],[pg_point_set(i,8),pg_point_set(i,2)],'linewidth',3);
-    end
-    saveas(h, picGrayWithBoxOutPath{1}, 'png');
-    close all;
-    if is_process_rgb
-        h = figure(1);
-        imshow(rgbOutWithBox,'InitialMagnification','fit');
+    if is_parallelogram == logical(true)
         for i = 1 : objectNum
-            line([pg_point_set(i,1),pg_point_set(i,3)],[pg_point_set(i,2),pg_point_set(i,4)],'linewidth',3);
-            line([pg_point_set(i,3),pg_point_set(i,5)],[pg_point_set(i,4),pg_point_set(i,6)],'linewidth',3);
-            line([pg_point_set(i,5),pg_point_set(i,7)],[pg_point_set(i,6),pg_point_set(i,8)],'linewidth',3);
-            line([pg_point_set(i,7),pg_point_set(i,1)],[pg_point_set(i,8),pg_point_set(i,2)],'linewidth',3);
+            grayOutWithBox = draw_line_by_two_point(grayOutWithBox,pg_point_set(i,1),pg_point_set(i,2),pg_point_set(i,3),pg_point_set(i,4));
+            grayOutWithBox = draw_line_by_two_point(grayOutWithBox,pg_point_set(i,3),pg_point_set(i,4),pg_point_set(i,5),pg_point_set(i,6));
+            grayOutWithBox = draw_line_by_two_point(grayOutWithBox,pg_point_set(i,5),pg_point_set(i,6),pg_point_set(i,7),pg_point_set(i,8));
+            grayOutWithBox = draw_line_by_two_point(grayOutWithBox,pg_point_set(i,7),pg_point_set(i,8),pg_point_set(i,1),pg_point_set(i,2));
         end
-        saveas(h, picRgbWithBoxOutPath{1}, 'png');
-        close all;
+        if is_process_rgb
+            for i = 1 : objectNum
+                rgbOutWithBox = draw_line_by_two_point(rgbOutWithBox,pg_point_set(i,1),pg_point_set(i,2),pg_point_set(i,3),pg_point_set(i,4));
+                rgbOutWithBox = draw_line_by_two_point(rgbOutWithBox,pg_point_set(i,3),pg_point_set(i,4),pg_point_set(i,5),pg_point_set(i,6));
+                rgbOutWithBox = draw_line_by_two_point(rgbOutWithBox,pg_point_set(i,5),pg_point_set(i,6),pg_point_set(i,7),pg_point_set(i,8));
+                rgbOutWithBox = draw_line_by_two_point(rgbOutWithBox,pg_point_set(i,7),pg_point_set(i,8),pg_point_set(i,1),pg_point_set(i,2));
+            end
+        end
     end
-    
+
     % 保存图像文件
+    imwrite(grayOutWithBox,picGrayWithBoxOutPath{1});
     imwrite(imgGray, picGrayPath{1}, 'Compression','none');%jpg存在压缩，考虑png无压缩保存
     imwrite(grayOut, picGrayOutPath{1}, 'Compression','none');
-    % imwrite(grayOutWithBox, picGrayWithBoxOutPath{1}, 'Compression','none');
-    imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
-    imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
-    imwrite(rgbOut, picRgbJpgOutPath{1});
-    % imwrite(rgbOutWithBox, picRgbWithBoxOutPath{1}, 'Compression','none');
     imwrite(img_gray_mask(:,:,end), picMask{1},'Compression','none');
+    if is_process_rgb
+        imwrite(rgbOutWithBox,picRgbWithBoxOutPath{1});
+        imwrite(imgRgb, picRgbPath{1}, 'Compression','none');
+        imwrite(rgbOut, picRgbOutPath{1}, 'Compression','none');
+        imwrite(rgbOut, picRgbJpgOutPath{1});
+    end
     
     % 保存文本文件
     txt_yolo_path = strcat(imgDataOutPath,'\','yolo_label_txt','\',imgDataDir(picCount).name);
     txt_yolo_path = strrep(txt_yolo_path, '.jpg', '.txt');
-    xml_yolo_path = strcat(imgDataOutPath,'\','voc_label_xml','\',imgDataDir(picCount).name);
-    xml_yolo_path = strrep(xml_yolo_path, '.jpg', '.xml');
+    voc_label_xml = strcat(imgDataOutPath,'\','voc_label_xml','\',imgDataDir(picCount).name);
+    voc_label_xml = strrep(voc_label_xml, '.jpg', '.xml');
+    voc_label_xml_pg = strcat(imgDataOutPath,'\','voc_label_xml_pg','\',imgDataDir(picCount).name);
+    voc_label_xml_pg = strrep(voc_label_xml_pg, '.jpg', '.xml');
     xlsx_all_info_path = strcat(imgDataOutPath,'\','xlsx_all_info','\',imgDataDir(picCount).name);
     xlsx_all_info_path = strrep(xlsx_all_info_path, '.jpg', '.xlsx');
     txt_yolo_data = zeros(objectNum, 5);
@@ -454,7 +460,10 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     dlmwrite(txt_yolo_path, txt_yolo_data, 'delimiter',' ');
     xlswrite(xlsx_all_info_path, object_info);
     % 接下来写xml
-    write_xml_pg(xml_yolo_path, [cols,rows,3], object_info, labelStrSet)
+    if is_parallelogram == logical(true)
+        write_xml_pg(voc_label_xml_pg, [cols,rows,3], object_info, labelStrSet)
+    end
+    write_xml(voc_label_xml, [cols,rows,3], object_info, labelStrSet)
     
     % 结束了单张图片处理
 %     disp('endok');
@@ -475,7 +484,16 @@ end %结束了所有图片处理
 
 % 调用python脚本，生成darknet yolo需要的txt label
 disp('图片和部分标签生成成功，接下来调用python脚本，生成darknet yolo需要的txt label，把所有图片标注信息放到一个txt文件中......');
-[status,cmdout]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\get_darknet_yolo_txt.py');
+disp('script 1 ...');
+[status1,cmdout1]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\get_darknet_yolo_txt.py');
+disp('script 2 ...');
+[status2,cmdout2]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\read_all_pic_name_to_a_txt.py');
+disp('script 3 ...');
+[status3,cmdout3]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\copy_file_to_vocdataset_and_cocodataset.py');
+disp('script 4 ...');
+[status4,cmdout4]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\get_jpg_path_and_xml_path_to_voc_txt.py');
+disp('script 5 ...');
+[status5,cmdout5]=system('python.exe D:\\Research\\My_tamper_detect_dataset_generate\\script\\voc_to_coco2.py');
 
 % 结束
 toc;
