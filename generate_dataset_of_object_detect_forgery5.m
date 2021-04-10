@@ -7,7 +7,11 @@
 % 2021.1.20更新：
 % 1. 将矩形框改成平行四边形框，主要思路是先随机多个平行四边形，不重叠，平行四
 %    边形中心开始向外膨胀,触碰到一边的边界则停止
-% author: ganyongdong <1141951289@qq.com> 2021.1.20
+% 2021.4.2更新：
+% 1. 去除椒盐噪声
+% 2. 添加二次JPEG压缩操作
+% 3. 把平行四边形标记由 [l t r b theta] 改成 [x y w h theta]
+% author: ganyongdong <1141951289@qq.com> 2021.4.2
 %
 
 clc; clear; close all;
@@ -124,7 +128,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     img_gray_medfilt = medfilt2(imgGray, [kernelVal, kernelVal]);%2中值滤波
     imgTmp = im2double(imgGray); % 改为你要读入图片的路径;im2double作归一化处理
     % img_gray_saltAndPepper = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density));%3.椒盐噪声
-    img_gray_awgn = awgn(double(imgGray), 30, 'measured'); %3.加高斯白噪声
+    img_gray_awgn = uint8(awgn(double(imgGray)/255, 30, 'measured')*255); %3.加高斯白噪声
     img_gray_histeq = histeq(imgGray); %4.直方图均衡化
     gausFilter = fspecial('gaussian',[kernelVal kernelVal],1); %高斯滤波核
     img_gray_gausFilter = imfilter(imgGray, gausFilter, 'replicate'); %5.高斯滤波
@@ -155,7 +159,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
         img_rgb_saltAndPepper(:,:,3) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %添加密度为5%的椒盐噪声
         %}
         % 3.加高斯白噪声        
-        img_rgb_awgn = awgn(double(imgRgb), 30, 'measured');
+        img_rgb_awgn = uint8(awgn(double(imgRgb)/255, 30, 'measured')*255);
         % 4.直方图均衡化
         img_rgb_histeq(:,:,1) = histeq(channelR);
         img_rgb_histeq(:,:,2) = histeq(channelG);
@@ -387,7 +391,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
                 label_str{i} = 'medianfilt';
                 color{i} = 'blue';
             case 3
-                label_str{i} = 'addnoise';
+                label_str{i} = 'awgn';
                 color{i} = 'green';
             case 4
                 label_str{i} = 'histeq';

@@ -1,32 +1,41 @@
+
+
 clc; clear; close all;
+imgRgb = imread('D:/DataSet/VOC2012_JPEGImages/2007_000033.jpg');
+imgGray = rgb2gray(imgRgb);
+figure('NumberTitle', 'off', 'Name', 'origin');
+imshow(imgGray);
+img_rgb_awgn = awgn(double(imgGray)/255, 30, 'measured');
+figure('NumberTitle', 'off', 'Name', 'awgn snr=30');
+imshow(uint8(img_rgb_awgn*255));
 
-imgSrc = imread('D:/DataSet/VOC2012_JPEGImages/2007_000033.jpg');
-
-gray = rgb2gray(imgSrc);
-[r, c] = size(gray);
-
-% gray2 = gammaCorrection(gray, 1.02, 1.02);
-img2 = imresize(imgSrc, 0.5);
-a = size(imgSrc,2);
-img_gray_resampling = imresize(img2, size(imgSrc,2));
+% imgSrc = imread('D:/DataSet/VOC2012_JPEGImages/2007_000033.jpg');
 % 
-% figure(1)
-% subplot(2,2,1)
-% imshow(gray);
-% subplot(2,2,2)
-% imshow(uint8(img_gray_resampling));
-
-% disp('okk');
-% y1 = awgn(double(gray), 30, 'measured');
+% gray = rgb2gray(imgSrc);
+% [r, c] = size(gray);
 % 
-% y2 = abs(y1 - gray_d);
-% sum_e = sum(y2,'all')/(r*c);
-% disp(sum_e);
+% % gray2 = gammaCorrection(gray, 1.02, 1.02);
+% img2 = imresize(imgSrc, 0.5);
+% a = size(imgSrc,2);
+% img_gray_resampling = imresize(img2, size(imgSrc,2));
+% % 
+% % figure(1)
+% % subplot(2,2,1)
+% % imshow(gray);
+% % subplot(2,2,2)
+% % imshow(uint8(img_gray_resampling));
 % 
-% figure(1)
-% subplot(2,2,1)
-% imshow(gray);
-% subplot(2,2,2)
-% imshow(uint8(y1));
-% subplot(2,2,3)
-% imshow(uint8(y2));
+% % disp('okk');
+% % y1 = awgn(double(gray), 30, 'measured');
+% % 
+% % y2 = abs(y1 - gray_d);
+% % sum_e = sum(y2,'all')/(r*c);
+% % disp(sum_e);
+% % 
+% % figure(1)
+% % subplot(2,2,1)
+% % imshow(gray);
+% % subplot(2,2,2)
+% % imshow(uint8(y1));
+% % subplot(2,2,3)
+% % imshow(uint8(y2));

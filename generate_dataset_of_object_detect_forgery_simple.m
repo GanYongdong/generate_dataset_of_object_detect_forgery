@@ -1,13 +1,6 @@
 %
-% 生成目标检测的数据集，这里目标是自己生成的一些局部操作区域
-% 比如这个取证数据集，给定图片集，读取每一张图片，会随机取一块不规则区域，随机
-% 采取6种操作方法中的一种进行操作，保存当前最大矩形框变量和操作后的图片，储存
-% 到本地文件.操作数目前是6，对应类别标签1-6
-% 输入输出目录和一些用户参数在用户区修改
-% 2021.1.20更新：
-% 1. 将矩形框改成平行四边形框，主要思路是先随机多个平行四边形，不重叠，平行四
-%    边形中心开始向外膨胀,触碰到一边的边界则停止
-% author: ganyongdong <1141951289@qq.com> 2021.1.20
+% 生成简单类别的数据集，测试数据集是否有错，生成的目标特征很明显
+% author: ganyongdong <1141951289@qq.com> 2021.4.2
 %
 
 clc; clear; close all;
@@ -120,64 +113,41 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
     end
         
     % 生成9幅不同操作的图像，后边对应操作的就从这取图像
-    img_gray_homoFilter = HomoFilter(imgGray, 2.2, 0.25, 2, homo_d0); %1同态滤波
-    img_gray_medfilt = medfilt2(imgGray, [kernelVal, kernelVal]);%2中值滤波
-    imgTmp = im2double(imgGray); % 改为你要读入图片的路径;im2double作归一化处理
-    % img_gray_saltAndPepper = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density));%3.椒盐噪声
-    img_gray_awgn = awgn(double(imgGray), 30, 'measured'); %3.加高斯白噪声
-    img_gray_histeq = histeq(imgGray); %4.直方图均衡化
-    gausFilter = fspecial('gaussian',[kernelVal kernelVal],1); %高斯滤波核
-    img_gray_gausFilter = imfilter(imgGray, gausFilter, 'replicate'); %5.高斯滤波
-	img_gray_prewittSharp = imgGray + uint8(filter2(fspecial('prewitt'),imgGray)*sharp_factor); %6.prewitt锐化
-    img_gray_resampling = imresize(imresize(imgGray, 0.5), size(imgGray)); %7.重采样
-    img_gray_gammaCorrect = gammaCorrection(imgGray, 1.02, 1.02); %8.gamma校正
-    
+    img_gray_homoFilter = uint8((1*255/8)*ones(size(imgGray)));
+    img_gray_medfilt = uint8((2*255/8)*ones(size(imgGray)));
+    img_gray_awgn = uint8((3*255/8)*ones(size(imgGray)));
+    img_gray_histeq = uint8((4*255/8)*ones(size(imgGray)));
+    img_gray_gausFilter = uint8((5*255/8)*ones(size(imgGray)));
+	img_gray_prewittSharp = uint8((6*255/8)*ones(size(imgGray)));
+    img_gray_resampling = uint8((7*255/8)*ones(size(imgGray)));
+    img_gray_gammaCorrect = uint8((8*255/8)*ones(size(imgGray)));
     if is_process_rgb %如果是三通道图像
-        channelR = imgRgb(:,:,1);
-        channelG = imgRgb(:,:,2);
-        channelB = imgRgb(:,:,3);
-        clear img_rgb_homoFilter img_rgb_medfilt img_rgb_saltAndPepper img_rgb_histeq img_rgb_gausFilter img_rgb_prewittSharp img_rgb_resampling img_rgb_gammaCorrect;
-        % 1.同态滤波
-        img_rgb_homoFilter(:,:,1) = HomoFilter(channelR, 2, 0.25, 1, homo_d0); % 同态滤波
-        img_rgb_homoFilter(:,:,2) = HomoFilter(channelG, 2, 0.25, 1, homo_d0); % 同态滤波
-        img_rgb_homoFilter(:,:,3) = HomoFilter(channelB, 2, 0.25, 1, homo_d0); % 同态滤波
-        % 2.中值滤波
-        img_rgb_medfilt(:,:,1) = medfilt2(channelR, [kernelVal, kernelVal]);
-        img_rgb_medfilt(:,:,2) = medfilt2(channelG, [kernelVal, kernelVal]);
-        img_rgb_medfilt(:,:,3) = medfilt2(channelB, [kernelVal, kernelVal]);
-        %{
-        % 3.添加噪声
-        imgTmp = im2double(channelR); % 归一化处理
-        img_rgb_saltAndPepper(:,:,1) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %添加密度为5%的椒盐噪声
-        imgTmp = im2double(channelG); % 归一化处理
-        img_rgb_saltAndPepper(:,:,2) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %添加密度为5%的椒盐噪声
-        imgTmp = im2double(channelB); % 归一化处理
-        img_rgb_saltAndPepper(:,:,3) = im2uint8(imnoise(imgTmp, 'salt & pepper', saltAndPepper_density)); %添加密度为5%的椒盐噪声
-        %}
-        % 3.加高斯白噪声        
-        img_rgb_awgn = awgn(double(imgRgb), 30, 'measured');
-        % 4.直方图均衡化
-        img_rgb_histeq(:,:,1) = histeq(channelR);
-        img_rgb_histeq(:,:,2) = histeq(channelG);
-        img_rgb_histeq(:,:,3) = histeq(channelB);
-        % 5.高斯滤波
-        img_rgb_gausFilter(:,:,1) = imfilter(channelR, gausFilter, 'replicate');
-        img_rgb_gausFilter(:,:,2) = imfilter(channelG, gausFilter, 'replicate');
-        img_rgb_gausFilter(:,:,3) = imfilter(channelB, gausFilter, 'replicate');
-        % 6.prewitt锐化
-        img_rgb_prewittSharp(:,:,1) = channelR + uint8(filter2(fspecial('prewitt'),channelR)*sharp_factor); %prewitt锐化
-        img_rgb_prewittSharp(:,:,2) = channelG + uint8(filter2(fspecial('prewitt'),channelG)*sharp_factor); %prewitt锐化
-        img_rgb_prewittSharp(:,:,3) = channelB + uint8(filter2(fspecial('prewitt'),channelB)*sharp_factor); %prewitt锐化
-        % 7.重采样
-        img_rgb_resampling = imresize3(imresize(imgRgb, 0.5), size(imgRgb));
-        % 8.gamma变换
-        img_rgb_gammaCorrect(:,:,1) = gammaCorrection(channelR, 1.02, 1.02);
-        img_rgb_gammaCorrect(:,:,2) = gammaCorrection(channelG, 1.02, 1.02);
-        img_rgb_gammaCorrect(:,:,3) = gammaCorrection(channelB, 1.02, 1.02);
-        
-        clear channelR channelG channelB imgTmp;
+        img_rgb_homoFilter = uint8((1*255/8)*ones(size(imgRgb)));
+        img_rgb_homoFilter(:,:,1) = uint8(2*255/8);
+        img_rgb_homoFilter(:,:,2) = uint8(3*255/8);
+        img_rgb_medfilt = uint8((2*255/8)*ones(size(imgRgb)));
+        img_rgb_medfilt(:,:,1) = uint8(3*255/8);
+        img_rgb_medfilt(:,:,2) = uint8(4*255/8);
+        img_rgb_awgn = uint8((3*255/8)*ones(size(imgRgb)));
+        img_rgb_awgn(:,:,1) = uint8(4*255/8);
+        img_rgb_awgn(:,:,2) = uint8(5*255/8);
+        img_rgb_histeq = uint8((4*255/8)*ones(size(imgRgb)));
+        img_rgb_histeq(:,:,1) = uint8(5*255/8);
+        img_rgb_histeq(:,:,2) = uint8(6*255/8);
+        img_rgb_gausFilter = uint8((5*255/8)*ones(size(imgRgb)));
+        img_rgb_gausFilter(:,:,1) = uint8(6*255/8);
+        img_rgb_gausFilter(:,:,2) = uint8(7*255/8);
+        img_rgb_prewittSharp = uint8((6*255/8)*ones(size(imgRgb)));
+        img_rgb_prewittSharp(:,:,1) = uint8(7*255/8);
+        img_rgb_prewittSharp(:,:,2) = uint8(8*255/8);
+        img_rgb_resampling = uint8((7*255/8)*ones(size(imgRgb)));
+        img_rgb_resampling(:,:,1) = uint8(8*255/8);
+        img_rgb_resampling(:,:,2) = uint8(1*255/8);
+        img_rgb_gammaCorrect = uint8((8*255/8)*ones(size(imgRgb)));
+        img_rgb_gammaCorrect(:,:,1) = uint8(1*255/8);
+        img_rgb_gammaCorrect(:,:,2) = uint8(2*255/8);
     end
-
+    
     % 显示调试
     %{
     figure (1)
@@ -387,7 +357,7 @@ for picCount = 1:length(imgDataDir) % 遍历所有图片文件
                 label_str{i} = 'medianfilt';
                 color{i} = 'blue';
             case 3
-                label_str{i} = 'addnoise';
+                label_str{i} = 'awgn';
                 color{i} = 'green';
             case 4
                 label_str{i} = 'histeq';
